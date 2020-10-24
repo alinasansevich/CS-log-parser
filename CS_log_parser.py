@@ -37,6 +37,59 @@ for i in range(len(killed_lines)):
     m_o = name_regex.split(killed_lines[i])
     all_m_o.append(m_o)
 
+player_1 = []
+for item in all_m_o:
+    player_1.append(item[1])
+
+player_1 = list(set(player_1))
+
+all_kills = {}
+for player in player_1:
+    kills = {}
+    for item in all_m_o:
+        if player == item[1]:
+            if item[5] not in kills.keys():
+                kills[item[5]] = 1
+            else:
+                kills[item[5]] += 1
+    all_kills[player] = kills
+
+
+for player, kills in all_kills.items():
+    print(player, '\t', kills)
+       
+
+
+
+
+
+# players = {'ender': {'konejo': 34,
+#                      'colo': 28,
+#                      'coco': 65
+#                      }
+#            'colo': {'pepitin': 99,
+#                     'ender': 22,
+#                     'konejo': 74}
+#            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 con = sqlite3.connect('CS_results.db')
 cur = con.cursor()
 
@@ -47,15 +100,31 @@ cur.execute("""
             Weapon TEXT NOT NULL)
             """)
 
+for item in all_m_o:    
+    cur.execute("""
+                INSERT INTO CSResults
+                VALUES (?, ?, ?)""",
+                (item[1], item[5], item[8][7:-2]))
 
-
-game_info = tuple()
 cur.execute("""
-            INSERT INTO CSResults
-            VALUES (?, ?, ?)""",
-            (game_info[0], game_info[1], game_info[2])
+            SELECT *
+            FROM CSResults
+            """)
+cur.fetchall()
 
+cur.execute("""
+            SELECT FirstPlayer, SUM(SecondPlayer), SecondPlayer
+            FROM CSResults
+            GROUP BY FirstPlayer
+            """)
+cur.fetchall()
 
+cur.execute("""
+            SELECT COUNT(FirstPlayer)
+            FROM CSResults
+            GROUP BY FirstPlayer
+            """)
+cur.fetchall()
 
 
 
