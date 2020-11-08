@@ -9,11 +9,48 @@ Created on Sat Oct 24 14:35:10 2020
 
 import re
 import sqlite3
+import pandas as pd
+import numpy as np
 
-filename = 'hlds6_hb.log'
+raw_file = 'hlds6_hb.log'
+file_name = raw_file[:-4] + '.txt'
 
-# with open(filename) as f:
-#     log = f.readlines()
+clean_log = ''
+
+with open(raw_file) as f:
+    for line in f:
+        if line.startswith('L '):
+            line = f.readline()
+            clean_log += '\n' + line
+        else:
+            continue
+    
+f = open(file_name, 'w')
+f.write(clean_log)
+f.close()
+
+def skip_line(i):
+    with open(file_name) as f:
+        row = 0
+        line = ''
+        if row != i:
+            row += 1
+        else:
+            line = f.readline()
+            
+    if line.startswith('L '):
+        return False
+    else:
+        return True
+
+cs_log = pd.read_csv(file_name,
+                     index_col=False,
+                     delim_whitespace=True,
+                     skiprows = lambda x: skip_line(x))
+
+###################
+
+
 
 with open(filename) as f:
     counter = 0
