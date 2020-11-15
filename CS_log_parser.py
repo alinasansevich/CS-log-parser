@@ -13,6 +13,28 @@ import pandas as pd
 import numpy as np
 
 raw_file = 'hlds6_hb.log'
+file_name = raw_file[:-4] + '_2.txt'
+
+clean_log = ''
+
+with open(raw_file) as f:
+    for line in f:
+        line = f.readline()
+        if line.startswith('L'):
+            clean_log +=  line
+
+f = open(file_name, 'w')
+f.write(clean_log)
+f.close()
+
+log = pd.read_csv(file_name)
+# ParserError: Error tokenizing data. C error: Expected 1 fields in line 76, saw 2
+log = pd.read_csv(file_name, header=None, error_bad_lines=False)
+
+error = 'Skipping line 76: expected 1 fields, saw 2\nSkipping line 87: expected 1 fields, saw 2\nSkipping line 115: expected 1 fields, saw 2\nSkipping line 132: expected 1 fields, saw 2\nSkipping line 213: expected 1 fields, saw 2\nSkipping line 252: expected 1 fields, saw 2\nSkipping line 278: expected 1 fields, saw 2\nSkipping line 495: expected 1 fields, saw 2\nSkipping line 688: expected 1 fields, saw 2\nSkipping line 713: expected 1 fields, saw 2\nSkipping line 725: expected 1 fields, saw 2\nSkipping line 814: expected 1 fields, saw 2\nSkipping line 983: expected 1 fields, saw 2\nSkipping line 1035: expected 1 fields, saw 2\nSkipping line 1537: expected 1 fields, saw 2\nSkipping line 1869: expected 1 fields, saw 2\nSkipping line 2074: expected 1 fields, saw 2\nSkipping line 2108: expected 1 fields, saw 2\nSkipping line 2109: expected 1 fields, saw 2\nSkipping line 2172: expected 1 fields, saw 2\nSkipping line 2174: expected 1 fields, saw 2\n'
+error.count('saw 2')
+
+raw_file = 'hlds6_hb.log'
 file_name = raw_file[:-4] + '.txt'
 
 clean_log = ''
